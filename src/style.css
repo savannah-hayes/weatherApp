@@ -1,0 +1,26 @@
+body {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  font-size: 20px;
+}
+
+.hamburger {
+  background-color: white;
+  display: block;
+  border-radius: 10px;
+  margin: 5px;
+  width: 30px;
+  height: 3px;
+}
+
+.theme-wrapper {
+  height: 45vh;
+  padding: 10px;
+  background: linear-gradient(rgb(89, 89, 251), rgb(162, 162, 253), white);
+}
+
+.sunrise-sunset-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+}
