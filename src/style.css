@@ -25,3 +25,9 @@ body {
   display: flex;
   justify-content: space-evenly;
 }
+
+.forecast-wrapper {
+  display: flex;
+  color: black;
+  justify-content: space-between;
+}
