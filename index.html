@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <div class="theme-wrapper">
+  <div class="theme-wrapper" id="themeWrapper">
   <header class="navbar">
     <span class="hamburger"></span>
     <span class="hamburger"></span>
@@ -19,8 +19,10 @@
 
   <main>
     <section class="main-section">
-      <img src="" class="icon" alt="">
+      <div class="temp">
       <h1 class="temperature" id="currentTemperature"></h1>
+      <img src="" class="main-icon" id="mainIcon" alt="">
+      </div>
       <h2 class="city-name" id="cityName"></h2>
       <p class="weather-description" id="weatherDescription"></p>
     </section>
@@ -33,9 +35,7 @@
     </section>
     </div>
 
-    <section id="forecast">
-    
-    </section>
+    <section id="forecast"></section>
   </main>
   <script src="./src/index.js"></script>
 </body>

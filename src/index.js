@@ -5,6 +5,8 @@ const sunriseTime = document.getElementById("sunriseTime");
 const sunsetTime = document.getElementById("sunsetTime");
 const dayOfWeek = document.querySelectorAll("#dayOfWeek");
 const forecastWrapper = document.getElementById("forecast");
+const themeWrapper = document.getElementById("themeWrapper");
+const mainIcon = document.getElementById("mainIcon");
 
 const formateTime = (data) => {
   const sunriseUnit = data.sys.sunrise;
@@ -36,11 +38,21 @@ const formateTime = (data) => {
 }
 
 const displayCityWeather = (data) => {
+  const iconID = data.weather[0].icon;
+  const displayIcon = `https://openweathermap.org/img/wn/${iconID}@2x.png`;
+
   cityName.innerHTML = data.name;
-  currentTemperature.innerHTML = `${Math.round(data.main.temp)} ℃`;
+  currentTemperature.innerHTML = `${Math.round(data.main.temp)} <span class="degree">℃</span>`;
   weatherDescription.innerHTML = data.weather[0].description;
   sunriseTime.innerHTML = formateTime(data).sunrise;
   sunsetTime.innerHTML = formateTime(data).sunset;
+  mainIcon.src = displayIcon;
+
+  if (iconID.includes("d")) {
+    themeWrapper.style.backgroundImage = "url('./images/day-sky.jpg')"
+  } else {
+    themeWrapper.style.backgroundImage = "url('./images/night-sky.jpg')"
+  }
 }
 
 const displayCityForecast = (data) => {
@@ -49,13 +61,13 @@ const displayCityForecast = (data) => {
     const daysOfWeek = new Date(forecastDays[i].dt * 1000);
     const days = daysOfWeek.getDay();
     const day = [
-      "sun",
-      "mon",
-      "tue",
-      "wed",
-      "thu",
-      "fri",
-      "sat"
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
     ]
 
     const dayNames = day[days];
@@ -65,9 +77,9 @@ const displayCityForecast = (data) => {
     const minTemp = Math.round(forecastDays[i].temp.min);
 
     forecastWrapper.innerHTML += `<div class="forecast-wrapper">
-      <h3>${dayNames}</h3>
-      <img src="${displayIcon}" alt="forecast icon">
-      <p>${maxTemp}/${minTemp}℃</p>
+      <h3 class="forecast-days">${dayNames}</h3>
+      <img class="forecast-icon" src="${displayIcon}" alt="forecast icon">
+      <p class="max-min-temp">${maxTemp} / ${minTemp}℃</p>
       </div>`
   }
 }
@@ -82,6 +94,7 @@ const fetchWeatherData = () => {
   fetch(API_URL)
     .then(response => response.json())
     .then(data => {
+      console.log(data)
       displayCityWeather(data)
     })
     .catch(error => console.log(error))
@@ -96,7 +109,6 @@ const fetchWeatherForecast = (lat, lon) => {
   fetch(API_URL)
     .then(response => response.json())
     .then(data => {
-      console.log(data)
       displayCityForecast(data)
     })
     .catch(error => console.log(error))
