@@ -7,6 +7,8 @@ const dayOfWeek = document.querySelectorAll("#dayOfWeek");
 const forecastWrapper = document.getElementById("forecast");
 const themeWrapper = document.getElementById("themeWrapper");
 const mainIcon = document.getElementById("mainIcon");
+const citySearchForm = document.getElementById("citySearchForm");
+const citySearch = document.getElementById("citySearch");
 
 const formateTime = (data) => {
   const sunriseUnit = data.sys.sunrise;
@@ -40,6 +42,8 @@ const formateTime = (data) => {
 const displayCityWeather = (data) => {
   const iconID = data.weather[0].icon;
   const displayIcon = `https://openweathermap.org/img/wn/${iconID}@2x.png`;
+  const lat = data.coord.lat;
+  const lon = data.coord.lon;
 
   cityName.innerHTML = data.name;
   currentTemperature.innerHTML = `${Math.round(data.main.temp)} <span class="degree">℃</span>`;
@@ -53,12 +57,14 @@ const displayCityWeather = (data) => {
   } else {
     themeWrapper.style.backgroundImage = "url('./images/night-sky.jpg')"
   }
+
+  fetchWeatherForecast(lat, lon)
 }
 
 const displayCityForecast = (data) => {
   const forecastDays = data.daily;
-  for (let i = 1; i < forecastDays.length; i++) {
-    const daysOfWeek = new Date(forecastDays[i].dt * 1000);
+  for (let index = 1; index < forecastDays.length; index++) {
+    const daysOfWeek = new Date(forecastDays[index].dt * 1000);
     const days = daysOfWeek.getDay();
     const day = [
       "Sun",
@@ -71,22 +77,26 @@ const displayCityForecast = (data) => {
     ]
 
     const dayNames = day[days];
-    const iconID = forecastDays[i].weather[0].icon;
+    const iconID = forecastDays[index].weather[0].icon;
     const displayIcon = `https://openweathermap.org/img/wn/${iconID}.png`
-    const maxTemp = Math.round(forecastDays[i].temp.max);
-    const minTemp = Math.round(forecastDays[i].temp.min);
+    const maxTemp = Math.round(forecastDays[index].temp.max);
+    const minTemp = Math.round(forecastDays[index].temp.min);
 
     forecastWrapper.innerHTML += `<div class="forecast-wrapper">
-      <h3 class="forecast-days">${dayNames}</h3>
-      <img class="forecast-icon" src="${displayIcon}" alt="forecast icon">
-      <p class="max-min-temp">${maxTemp} / ${minTemp}℃</p>
+      <span><h3 class="forecast-days">${dayNames}</h3></span>
+      <span class="justify-center"><img class="forecast-icon" src="${displayIcon}" alt="forecast icon"></span>
+      <span class="justify-end"><p class="max-min-temp">${maxTemp}° / ${minTemp}°</p></span>
       </div>`
   }
 }
 
+const handleCitySearch = (event) => {
+  event.preventDefault()
+  fetchWeatherData(citySearch.value)
+  forecastWrapper.innerHTML = ""
+}
 
-const fetchWeatherData = () => {
-  const city = "stockholm"
+const fetchWeatherData = (city) => {
   const units = "metric"
   const apiKey = "ad293c37c3b9054770dc9a8a4fe94536"
   const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${units}`
@@ -94,7 +104,6 @@ const fetchWeatherData = () => {
   fetch(API_URL)
     .then(response => response.json())
     .then(data => {
-      console.log(data)
       displayCityWeather(data)
     })
     .catch(error => console.log(error))
@@ -114,5 +123,6 @@ const fetchWeatherForecast = (lat, lon) => {
     .catch(error => console.log(error))
 }
 
-fetchWeatherData()
-fetchWeatherForecast("59.32", "18.06")
+fetchWeatherData("stockholm")
+
+citySearchForm.addEventListener("submit", handleCitySearch)
